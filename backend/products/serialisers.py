@@ -18,4 +18,7 @@ class ProductSerialiser(serializers.ModelSerializer):
         ]
 
     def get_discount(self, class_instance):
+
+        if not isinstance(class_instance, Product):
+            return None
         return class_instance.get_discount()

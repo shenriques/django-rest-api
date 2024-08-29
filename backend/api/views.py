@@ -5,11 +5,12 @@ from products.models import Product
 from products.serialisers import ProductSerialiser
 
 # django rest framework view
-@api_view(["GET"])
+@api_view(["POST"])
 def api_home(request, *args, **kwargs): # request -> HttpRequest class instance from django
 
-    instance = Product.objects.all().order_by("?").first()
-    data = {}
-    if instance:
-        data = ProductSerialiser(instance).data
+    serialiser = ProductSerialiser(data=request.data)
+    if serialiser.is_valid(raise_exception=True):
+        instance = serialiser.save()
+        print(instance)
+        data = serialiser.data
     return Response(data)
