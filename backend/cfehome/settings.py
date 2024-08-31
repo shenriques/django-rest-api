@@ -125,3 +125,17 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# authentication & permission methods used by default for views in the rest framework
+REST_FRAMEWORK = { 
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        # allows cookies/sessions to manage authentication. v traditional web dev. 
+        "rest_framework.authentication.SessionAuthentication",
+        # auth method of passing token in HTTP request header, doesnt rely on cookies/sessions. stateless = good for rest
+        "rest_framework.authentication.TokenAuthentication"
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        # only authenticates users can write to api, everyone can read from api
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly" 
+    ]
+}

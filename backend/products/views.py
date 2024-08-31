@@ -12,10 +12,6 @@ from .permissions import IsStaffEditorPermission
 class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerialiser
-    authentication_classes = [
-        authentication.SessionAuthentication,
-        authentication.TokenAuthentication
-    ]
     # applies permissions to one view using permissions defined in admin
     # order matters! e.g. [Admin, Staff] checks for admin first
     permission_classes = [permissions.IsAdminUser, IsStaffEditorPermission]
