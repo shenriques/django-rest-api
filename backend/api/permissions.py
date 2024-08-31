@@ -12,6 +12,13 @@ class IsStaffEditorPermission(permissions.DjangoModelPermissions):
         'DELETE': ['%(app_label)s.delete_%(model_name)s'], 
     }
 
+    '''
+    super() allows the custom IsStaffEditorPermission class to:
+        1. check user is a staff member
+        2. if they are, delegate further permission checks to the DjangoModelPermissions class. 
+    lets you extend the functionality of the parent class's has_permission method without completely rewriting it
+    '''
+
     def has_permission(self, request, view):
         if not request.user.is_staff:
             return False

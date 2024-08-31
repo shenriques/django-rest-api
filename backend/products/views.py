@@ -1,20 +1,18 @@
-from rest_framework import generics, mixins, permissions, authentication
+from rest_framework import generics
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from django.shortcuts import get_object_or_404
 
+from api.mixins import StaffEditorPermissionMixin
+
 from .models import Product
 from .serialisers import ProductSerialiser
-from .permissions import IsStaffEditorPermission
 
-class ProductListCreateAPIView(generics.ListCreateAPIView):
+class ProductListCreateAPIView(StaffEditorPermissionMixin, generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerialiser
-    # applies permissions to one view using permissions defined in admin
-    # order matters! e.g. [Admin, Staff] checks for admin first
-    permission_classes = [permissions.IsAdminUser, IsStaffEditorPermission]
 
     # method for overriding object save / deletion behaviour
     def perform_create(self, serializer):
@@ -27,12 +25,7 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
 
         serializer.save(content=content)
 
-class ProductMixinView(
-        mixins.CreateModelMixin, 
-        mixins.ListModelMixin, 
-        mixins.RetrieveModelMixin,
-        generics.GenericAPIView
-    ):
+class ProductMixinView(StaffEditorPermissionMixin, generics.GenericAPIView):
 
     queryset = Product.objects.all()
     serializer_class = ProductSerialiser
@@ -60,12 +53,12 @@ class ProductMixinView(
 
         serializer.save(content=content)
 
-class ProductDetailAPIView(generics.RetrieveAPIView):
+class ProductDetailAPIView(StaffEditorPermissionMixin, generics.RetrieveAPIView):
     queryset = Product.objects.all()
     # has to be serializer not serialiser!!!
     serializer_class = ProductSerialiser
 
-class ProductUpdateAPIView(generics.UpdateAPIView):
+class ProductUpdateAPIView(StaffEditorPermissionMixin, generics.UpdateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerialiser
     lookup_field = 'pk'
@@ -75,7 +68,7 @@ class ProductUpdateAPIView(generics.UpdateAPIView):
         if not instance.content:
             instance.content = instance.title
 
-class ProductDestroyAPIView(generics.DestroyAPIView):
+class ProductDestroyAPIView(StaffEditorPermissionMixin, generics.DestroyAPIView):
     queryset = Product.objects.all()
     # has to be serializer not serialiser!!!
     serializer_class = ProductSerialiser
