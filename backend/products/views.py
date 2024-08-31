@@ -7,13 +7,15 @@ from django.shortcuts import get_object_or_404
 
 from .models import Product
 from .serialisers import ProductSerialiser
+from .permissions import IsStaffEditorPermission
 
 class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerialiser
     authentication_classes = [authentication.SessionAuthentication]
     # applies permissions to one view using permissions defined in admin
-    permission_classes = [permissions.DjangoModelPermissions]
+    # order matters! e.g. [Admin, Staff] checks for admin first
+    permission_classes = [IsStaffEditorPermission]
 
     # method for overriding object save / deletion behaviour
     def perform_create(self, serializer):
