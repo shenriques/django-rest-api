@@ -10,6 +10,7 @@ class ProductSerialiser(serializers.ModelSerializer):
         model = Product
         # fields = '__all__'
         fields = [
+            'pk',
             'title',
             'content',
             'price',
