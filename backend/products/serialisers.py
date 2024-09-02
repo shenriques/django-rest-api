@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from .models import Product
+from . import validators
 
 class ProductSerialiser(serializers.ModelSerializer):
     # enrich serialiser with other values
@@ -8,6 +9,11 @@ class ProductSerialiser(serializers.ModelSerializer):
     # add clickable url for each product (only works on model serialiser)
     url = serializers.HyperlinkedIdentityField(view_name='product-detail', lookup_field='pk')
 
+    # validate the title field
+    title = serializers.CharField(validators=[validators.validate_title_no_hello, validators.unique_product_title])
+
+    # can use foreign key relationships (i.e if there was a user attached to the product model)
+    # e.g. owner = serializers.CharField(source=user.email, read_only=True), then add to Meta fields
     class Meta:
         model = Product
         # fields = '__all__'
