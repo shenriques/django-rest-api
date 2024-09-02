@@ -5,11 +5,14 @@ from .models import Product
 class ProductSerialiser(serializers.ModelSerializer):
     # enrich serialiser with other values
     discount = serializers.SerializerMethodField(read_only=True)
+    # add clickable url for each product (only works on model serialiser)
+    url = serializers.HyperlinkedIdentityField(view_name='product-detail', lookup_field='pk')
 
     class Meta:
         model = Product
         # fields = '__all__'
         fields = [
+            'url',
             'pk',
             'title',
             'content',
