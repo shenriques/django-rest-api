@@ -7,8 +7,6 @@ from .models import Product
 # dont want to expose all data to algolia for search 
 @register(Product)
 class ProductIndex(AlgoliaIndex):
-    # filter the instances that get indexed (public must be True  )
-    should_index = 'is_public'
     fields = [
         'title',
         'content',
@@ -16,3 +14,10 @@ class ProductIndex(AlgoliaIndex):
         'user',
         'public'
     ]
+
+    settings = {
+        'searchableAttributes': ['title', 'content'],
+        'attributesForFaceting': ['user', 'public'] # enables stuff like 'show products by this user', 'show public products'
+    }
+
+    tags = 'get_tags_list'
