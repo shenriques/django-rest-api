@@ -137,5 +137,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         # only authenticates users can write to api, everyone can read from api
         "rest_framework.permissions.IsAuthenticatedOrReadOnly" 
-    ]
+    ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 10
 }

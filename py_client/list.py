@@ -17,5 +17,15 @@ if auth_response.status_code == 200:
     }
     endpoint = "http://localhost:8000/api/products/"
     get_response = requests.get(endpoint, headers=headers)
-    print(get_response.json())
+    
+    data = get_response.json()
+    next_url = data['next']
+    results = data['results']
+
+    print(next_url)
+    print(results)
+    
+    # how to loop through pagination
+    # if next_url is not None:
+    #     get_response = requests.get(next_url, headers=headers)
 
