@@ -1,10 +1,18 @@
 from rest_framework import serializers
 
+from api.serialisers import UserPublicSerialiser
+
 from .models import Product
 from . import validators
 
+class ProductInlineSerialiser(serializers.Serializer):
+    url = serializers.HyperlinkedIdentityField(view_name='product-detail', lookup_field='pk', read_only=True)
+    title = serializers.CharField(read_only=True)
+
 class ProductSerialiser(serializers.ModelSerializer):
     # enrich serialiser with other values
+    owner = UserPublicSerialiser(source='user', read_only=True)
+    related_products = ProductInlineSerialiser(source='user.product_set.all', many=True, read_only=True)
     discount = serializers.SerializerMethodField(read_only=True)
     # add clickable url for each product (only works on model serialiser)
     url = serializers.HyperlinkedIdentityField(view_name='product-detail', lookup_field='pk')
@@ -18,13 +26,15 @@ class ProductSerialiser(serializers.ModelSerializer):
         model = Product
         # fields = '__all__'
         fields = [
+            'owner',
             'url',
             'pk',
             'title',
             'content',
             'price',
             'sale_price',
-            'discount'
+            'discount',
+            'related_products'
         ]
 
     def get_discount(self, class_instance):
