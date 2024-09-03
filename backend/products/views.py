@@ -5,12 +5,12 @@ from rest_framework.response import Response
 
 from django.shortcuts import get_object_or_404
 
-from api.mixins import StaffEditorPermissionMixin
+from api.mixins import StaffEditorPermissionMixin, UserQuerySetMixin
 
 from .models import Product
 from .serialisers import ProductSerialiser
 
-class ProductListCreateAPIView(StaffEditorPermissionMixin, generics.ListCreateAPIView):
+class ProductListCreateAPIView(StaffEditorPermissionMixin, UserQuerySetMixin, generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerialiser
 
@@ -23,7 +23,7 @@ class ProductListCreateAPIView(StaffEditorPermissionMixin, generics.ListCreateAP
         if content is None:
             content = title
 
-        serializer.save(content=content)
+        serializer.save(user=self.request.user, content=content)
 
 class ProductMixinView(StaffEditorPermissionMixin, generics.GenericAPIView):
 
@@ -53,12 +53,12 @@ class ProductMixinView(StaffEditorPermissionMixin, generics.GenericAPIView):
 
         serializer.save(content=content)
 
-class ProductDetailAPIView(StaffEditorPermissionMixin, generics.RetrieveAPIView):
+class ProductDetailAPIView(StaffEditorPermissionMixin, UserQuerySetMixin, generics.RetrieveAPIView):
     queryset = Product.objects.all()
     # has to be serializer not serialiser!!!
     serializer_class = ProductSerialiser
 
-class ProductUpdateAPIView(StaffEditorPermissionMixin, generics.UpdateAPIView):
+class ProductUpdateAPIView(StaffEditorPermissionMixin, UserQuerySetMixin, generics.UpdateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerialiser
     lookup_field = 'pk'
@@ -68,7 +68,7 @@ class ProductUpdateAPIView(StaffEditorPermissionMixin, generics.UpdateAPIView):
         if not instance.content:
             instance.content = instance.title
 
-class ProductDestroyAPIView(StaffEditorPermissionMixin, generics.DestroyAPIView):
+class ProductDestroyAPIView(StaffEditorPermissionMixin, UserQuerySetMixin, generics.DestroyAPIView):
     queryset = Product.objects.all()
     # has to be serializer not serialiser!!!
     serializer_class = ProductSerialiser

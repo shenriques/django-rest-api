@@ -2,9 +2,11 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from .models import Product
 
+# example of applying custom validation checks
 def validate_title_no_hello(value):
     if 'hello' in value.lower():
-        raise serializers.ValidationError("Can't put hello in the title")
+        raise serializers.ValidationError(f"{value} is not allowed")
     return value
 
-unique_product_title = UniqueValidator(queryset=Product.objects.all())
+# iexact = case insensitive
+unique_product_title = UniqueValidator(queryset=Product.objects.all(), lookup='iexact')
