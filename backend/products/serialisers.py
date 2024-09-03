@@ -12,8 +12,7 @@ class ProductInlineSerialiser(serializers.Serializer):
 class ProductSerialiser(serializers.ModelSerializer):
     # enrich serialiser with other values
     owner = UserPublicSerialiser(source='user', read_only=True)
-    related_products = ProductInlineSerialiser(source='user.product_set.all', many=True, read_only=True)
-    discount = serializers.SerializerMethodField(read_only=True)
+
     # add clickable url for each product (only works on model serialiser)
     url = serializers.HyperlinkedIdentityField(view_name='product-detail', lookup_field='pk')
 
@@ -32,9 +31,7 @@ class ProductSerialiser(serializers.ModelSerializer):
             'title',
             'content',
             'price',
-            'sale_price',
-            'discount',
-            'related_products'
+            'sale_price'
         ]
 
     def get_discount(self, class_instance):
