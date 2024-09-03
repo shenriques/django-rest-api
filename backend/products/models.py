@@ -38,6 +38,10 @@ class Product(models.Model):
     # means search() method can run on any queryset
     objects = ProductManager()
 
+    # method to determine if instance gets indexed for algolia
+    def is_public(self) -> bool:
+        return self.public
+
     @property
     def sale_price(self):
         return "%.2f" %(float(self.price) * 0.8)
