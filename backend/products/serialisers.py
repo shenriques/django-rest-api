@@ -32,7 +32,9 @@ class ProductSerialiser(serializers.ModelSerializer):
             'content',
             'price',
             'sale_price',
-            'public'
+            'public',
+            'path',
+            'endpoint'
         ]
 
     def get_discount(self, class_instance):
