@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import datetime
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # third party packages
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     # internal apps
     'api',
     'products',
@@ -137,7 +138,8 @@ REST_FRAMEWORK = {
         # allows cookies/sessions to manage authentication. v traditional web dev. 
         "rest_framework.authentication.SessionAuthentication",
         # auth method of passing token in HTTP request header, doesnt rely on cookies/sessions. stateless = good for rest
-        "rest_framework.authentication.TokenAuthentication"
+        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication"
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         # only authenticates users can write to api, everyone can read from api
@@ -149,6 +151,11 @@ REST_FRAMEWORK = {
 
 ALGOLIA = {
   'APPLICATION_ID': 'H5SKV46V5N',
-  'API_KEY': '<INSERT API KEY>',
+  'API_KEY': '5edc29d50d2ec5d83bda7079f10fdf02',
   'INDEX_PREFIX': 'cfe'
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(minutes=1),
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(minutes=3)
 }
